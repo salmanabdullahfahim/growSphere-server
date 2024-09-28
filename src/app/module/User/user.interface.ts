@@ -10,7 +10,6 @@ export interface TUser {
   profileImage: string;
   password: string;
   phone: string;
-  address: string;
   role: "user" | "admin";
 }
 

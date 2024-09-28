@@ -9,7 +9,6 @@ const userSchema = new Schema<TUser, UserModel>({
   profileImage: { type: String, required: true },
   password: { type: String, required: true, select: 0 },
   phone: { type: String, required: true },
-  address: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
@@ -28,8 +27,7 @@ userSchema.pre("save", async function (next) {
 
 // remove password field from response
 userSchema.post("save", function (doc, next) {
-  doc.password = undefined;
-
+  (doc as any).password = undefined;
   next();
 });
 
