@@ -10,6 +10,7 @@ const userSchema = new Schema<TUser, UserModel>({
   password: { type: String, required: true, select: 0 },
   phone: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
+  isVerified: { type: Boolean, default: false },
 });
 
 // password hashing
