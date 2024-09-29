@@ -16,7 +16,37 @@ const updateUser = async (id: string, payload: Partial<TUser>) => {
   return result;
 };
 
+const followUser = async (followerId: string, followingId: string) => {
+  const result = await User.findByIdAndUpdate(
+    followerId,
+    { $addToSet: { following: followingId } },
+    { new: true }
+  );
+
+  await User.findByIdAndUpdate(followingId, {
+    $addToSet: { followers: followerId },
+  });
+
+  return result;
+};
+
+const unfollowUser = async (followerId: string, followingId: string) => {
+  const result = await User.findByIdAndUpdate(
+    followerId,
+    { $pull: { following: followingId } },
+    { new: true }
+  );
+
+  await User.findByIdAndUpdate(followingId, {
+    $pull: { followers: followerId },
+  });
+
+  return result;
+};
+
 export const userServices = {
   getSingleUser,
   updateUser,
+  followUser,
+  unfollowUser,
 };

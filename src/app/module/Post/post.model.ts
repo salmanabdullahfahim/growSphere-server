@@ -24,7 +24,3 @@ const PostSchema: Schema = new Schema<TPost>(
 );
 
 export const Post = mongoose.model<TPost & Document>("Post", PostSchema);
-export const Comment = mongoose.model<TComment & Document>(
-  "Comment",
-  CommentSchema
-);

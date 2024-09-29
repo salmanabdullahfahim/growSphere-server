@@ -27,7 +27,37 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const followUser = catchAsync(async (req: Request, res: Response) => {
+  const { followerId } = req.body;
+  const followingId = req.params.id;
+
+  const result = await userServices.followUser(followerId, followingId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User followed successfully",
+    data: result,
+  });
+});
+
+const unfollowUser = catchAsync(async (req: Request, res: Response) => {
+  const { followerId } = req.body;
+  const followingId = req.params.id;
+
+  const result = await userServices.unfollowUser(followerId, followingId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User unfollowed successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   getUserByEmail,
   updateUser,
+  followUser,
+  unfollowUser,
 };

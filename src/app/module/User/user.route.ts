@@ -16,4 +16,8 @@ router.patch(
   userController.updateUser
 );
 
+router.post("/follow/:id", auth(USER_ROLE.user), userController.followUser);
+
+router.post("/unfollow/:id", auth(USER_ROLE.user), userController.unfollowUser);
+
 export const userRoutes = router;

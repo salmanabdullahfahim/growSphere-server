@@ -11,6 +11,8 @@ export interface TUser {
   password: string;
   phone: string;
   role: "user" | "admin";
+  followers: TUser[];
+  following: TUser[];
   isVerified?: boolean;
 }
 
