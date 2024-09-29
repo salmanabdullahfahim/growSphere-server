@@ -55,9 +55,58 @@ const unfollowUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// favorite post
+const favoritePost = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.body;
+  const postId = req.params.id;
+
+  const result = await userServices.favoritePost(userId, postId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post added to favorites successfully",
+    data: result,
+  });
+});
+
+// unfavorite post
+const unfavoritePost = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.body;
+  const postId = req.params.id;
+
+  const result = await userServices.unfavoritePost(userId, postId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post removed from favorites successfully",
+    data: result,
+  });
+});
+
+// get user favorites posts
+const getUserFavoritesPosts = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.params.id;
+
+    const result = await userServices.getUserFavorites(userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User favorites retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 export const userController = {
   getUserByEmail,
   updateUser,
   followUser,
   unfollowUser,
+  favoritePost,
+  unfavoritePost,
+  getUserFavoritesPosts,
 };

@@ -44,9 +44,37 @@ const unfollowUser = async (followerId: string, followingId: string) => {
   return result;
 };
 
+const favoritePost = async (userId: string, postId: string) => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $addToSet: { favoritesPosts: postId } },
+    { new: true }
+  );
+
+  return result;
+};
+
+const unfavoritePost = async (userId: string, postId: string) => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $pull: { favoritesPosts: postId } },
+    { new: true }
+  );
+
+  return result;
+};
+
+const getUserFavorites = async (userId: string) => {
+  const result = await User.findById(userId).populate("favoritesPosts");
+  return result?.favoritesPosts;
+};
+
 export const userServices = {
   getSingleUser,
   updateUser,
   followUser,
   unfollowUser,
+  favoritePost,
+  unfavoritePost,
+  getUserFavorites,
 };

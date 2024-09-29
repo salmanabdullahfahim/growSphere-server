@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 
-import { Model } from "mongoose";
+import { Model, Schema } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
 export interface TUser {
@@ -13,6 +13,7 @@ export interface TUser {
   role: "user" | "admin";
   followers: TUser[];
   following: TUser[];
+  favoritesPosts: Schema.Types.ObjectId[];
   isVerified?: boolean;
 }
 

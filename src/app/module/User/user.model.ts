@@ -12,6 +12,7 @@ const userSchema = new Schema<TUser, UserModel>({
   role: { type: String, enum: ["user", "admin"], default: "user" },
   followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  favoritesPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   isVerified: { type: Boolean, default: false },
 });
 

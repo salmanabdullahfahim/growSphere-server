@@ -20,4 +20,8 @@ router.post("/follow/:id", userController.followUser);
 
 router.post("/unfollow/:id", userController.unfollowUser);
 
+router.post("/favorite/:id", userController.favoritePost);
+router.post("/unfavorite/:id", userController.unfavoritePost);
+router.get("/favorites/:id", userController.getUserFavoritesPosts);
+
 export const userRoutes = router;
