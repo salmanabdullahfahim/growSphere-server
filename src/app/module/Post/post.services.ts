@@ -1,6 +1,8 @@
 import { Post } from "./post.model";
 import { TPost, TComment } from "./post.interface";
 import { Types } from "mongoose";
+import { SortOrder } from "mongoose";
+import { QueryBuilder } from "../../builder/QueryBuilder";
 
 const createPost = async (postData: Partial<TPost>): Promise<TPost> => {
   const result = await Post.create(postData);
@@ -30,11 +32,29 @@ const getPost = async (id: string): Promise<TPost | null> => {
 };
 
 const getPosts = async (
-  filter: any = {},
-  sort: any = { createdAt: -1 }
-): Promise<TPost[]> => {
-  const result = await Post.find(filter).sort(sort).populate("author");
-  return result;
+  query: Record<string, unknown>
+): Promise<{ posts: TPost[]; total: number; page: number; limit: number }> => {
+  const searchableFields = ["title", "content"];
+  const postQuery = new QueryBuilder(Post.find().populate("author"), query)
+    .search(searchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const [posts, total] = await Promise.all([
+    postQuery.modelQuery,
+    Post.countDocuments(postQuery.modelQuery.getFilter()),
+  ]);
+
+  const { page = 1, limit = 10 } = query;
+
+  return {
+    posts,
+    total,
+    page: Number(page),
+    limit: Number(limit),
+  };
 };
 
 const addComment = async (

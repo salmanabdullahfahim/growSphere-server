@@ -4,6 +4,7 @@ import sendResponse from "../../utils/sendResponse";
 import { postServices } from "./post.services";
 
 import AppError from "../../errors/AppError";
+import { SortOrder } from "mongoose";
 
 const createPost = catchAsync(async (req, res) => {
   const result = await postServices.createPost(req.body);
@@ -46,7 +47,16 @@ const getPost = catchAsync(async (req, res) => {
 });
 
 const getPosts = catchAsync(async (req, res) => {
-  const result = await postServices.getPosts(req.query);
+  const query = { ...req.query };
+
+  // If there's a search term, modify the sort to prioritize upvotes
+  if (query.searchTerm) {
+    query.sort = "upVotes";
+    query.order = "desc";
+  }
+
+  const result = await postServices.getPosts(query);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
