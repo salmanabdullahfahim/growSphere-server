@@ -52,7 +52,7 @@ const addComment = async (
       },
     },
     { new: true }
-  );
+  ).populate("author");
   return result;
 };
 

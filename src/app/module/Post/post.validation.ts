@@ -22,7 +22,10 @@ const updatePostSchema = z.object({
 });
 
 const commentSchema = z.object({
-  content: z.string().min(1),
+  body: z.object({
+    content: z.string().min(1),
+    author: z.string({ required_error: "Author is required" }),
+  }),
 });
 
 const voteSchema = z.object({
