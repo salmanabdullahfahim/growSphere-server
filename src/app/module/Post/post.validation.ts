@@ -29,7 +29,15 @@ const commentSchema = z.object({
 });
 
 const voteSchema = z.object({
-  type: z.enum(["upvote", "downvote"]),
+  body: z.object({
+    voteType: z.enum(["upvote", "downvote"]),
+  }),
+});
+
+const editCommentSchema = z.object({
+  body: z.object({
+    content: z.string().min(1).optional(),
+  }),
 });
 
 export const postValidations = {
@@ -37,4 +45,5 @@ export const postValidations = {
   updatePostSchema,
   commentSchema,
   voteSchema,
+  editCommentSchema,
 };

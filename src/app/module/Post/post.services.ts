@@ -1,5 +1,6 @@
 import { Post } from "./post.model";
 import { TPost, TComment } from "./post.interface";
+import { Types } from "mongoose";
 
 const createPost = async (postData: Partial<TPost>): Promise<TPost> => {
   const result = await Post.create(postData);
@@ -58,13 +59,93 @@ const addComment = async (
 
 const vote = async (
   postId: string,
+  userId: string,
   voteType: "upvote" | "downvote"
 ): Promise<TPost | null> => {
-  const update =
-    voteType === "upvote"
-      ? { $inc: { upVotes: 1 } }
-      : { $inc: { downVotes: 1 } };
-  const result = await Post.findByIdAndUpdate(postId, update, { new: true });
+  const post = await Post.findById(postId);
+  if (!post) return null;
+
+  const hasUpvoted = post.upvotedBy.includes(new Types.ObjectId(userId));
+  const hasDownvoted = post.downvotedBy.includes(new Types.ObjectId(userId));
+
+  if (voteType === "upvote") {
+    if (hasUpvoted) {
+      // User already upvoted, so remove the upvote
+      post.upVotes--;
+      post.upvotedBy = post.upvotedBy.filter((id) => id.toString() !== userId);
+    } else {
+      // Add upvote and remove downvote if exists
+      post.upVotes++;
+      post.upvotedBy.push(new Types.ObjectId(userId));
+      if (hasDownvoted) {
+        post.downVotes--;
+        post.downvotedBy = post.downvotedBy.filter(
+          (id) => id.toString() !== userId
+        );
+      }
+    }
+  } else if (voteType === "downvote") {
+    if (hasDownvoted) {
+      // User already downvoted, so remove the downvote
+      post.downVotes--;
+      post.downvotedBy = post.downvotedBy.filter(
+        (id) => id.toString() !== userId
+      );
+    } else {
+      // Add downvote and remove upvote if exists
+      post.downVotes++;
+      post.downvotedBy.push(new Types.ObjectId(userId));
+      if (hasUpvoted) {
+        post.upVotes--;
+        post.upvotedBy = post.upvotedBy.filter(
+          (id) => id.toString() !== userId
+        );
+      }
+    }
+  }
+
+  return await post.save();
+};
+
+const editComment = async (
+  postId: string,
+  commentId: string,
+  userId: string,
+  updatedContent: string
+): Promise<TPost | null> => {
+  const result = await Post.findOneAndUpdate(
+    {
+      _id: postId,
+      "comments._id": commentId,
+      "comments.author": new Types.ObjectId(userId),
+    },
+    {
+      $set: {
+        "comments.$.content": updatedContent,
+        "comments.$.updatedAt": new Date(),
+      },
+    },
+    { new: true }
+  ).populate("author");
+  return result;
+};
+
+const deleteComment = async (
+  postId: string,
+  commentId: string,
+  userId: string
+): Promise<TPost | null> => {
+  const result = await Post.findOneAndUpdate(
+    {
+      _id: postId,
+      "comments._id": commentId,
+      "comments.author": new Types.ObjectId(userId),
+    },
+    {
+      $pull: { comments: { _id: commentId } },
+    },
+    { new: true }
+  ).populate("author");
   return result;
 };
 
@@ -76,4 +157,6 @@ export const postServices = {
   getPosts,
   addComment,
   vote,
+  editComment,
+  deleteComment,
 };

@@ -3,6 +3,8 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { postServices } from "./post.services";
 
+import AppError from "../../errors/AppError";
+
 const createPost = catchAsync(async (req, res) => {
   const result = await postServices.createPost(req.body);
   sendResponse(res, {
@@ -64,11 +66,84 @@ const addComment = catchAsync(async (req, res) => {
 });
 
 const vote = catchAsync(async (req, res) => {
-  const result = await postServices.vote(req.params.id, req.body.voteType);
+  const postId = req.params.id;
+
+  const { voteType, userId } = req.body;
+
+  if (!userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+
+  const result = await postServices.vote(postId, userId.toString(), voteType);
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Vote recorded successfully",
+    data: result,
+  });
+});
+
+const editComment = catchAsync(async (req, res) => {
+  const { postId, commentId } = req.params;
+  const { content } = req.body;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+
+  const result = await postServices.editComment(
+    postId,
+    commentId,
+    userId.toString(),
+    content
+  );
+
+  if (!result) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Comment not found or you are not authorized to edit this comment"
+    );
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Comment updated successfully",
+    data: result,
+  });
+});
+
+const deleteComment = catchAsync(async (req, res) => {
+  const { postId, commentId } = req.params;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+
+  const result = await postServices.deleteComment(
+    postId,
+    commentId,
+    userId.toString()
+  );
+
+  if (!result) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Comment not found or you are not authorized to delete this comment"
+    );
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Comment deleted successfully",
     data: result,
   });
 });
@@ -81,4 +156,6 @@ export const postController = {
   getPosts,
   addComment,
   vote,
+  editComment,
+  deleteComment,
 };

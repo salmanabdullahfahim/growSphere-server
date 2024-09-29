@@ -9,6 +9,8 @@ export type TPost = {
   images: string[];
   upVotes: number;
   downVotes: number;
+  upvotedBy: Types.ObjectId[];
+  downvotedBy: Types.ObjectId[];
   comments?: TComment[];
 };
 

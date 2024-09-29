@@ -16,6 +16,8 @@ const PostSchema: Schema = new Schema<TPost>(
     images: [{ type: String }],
     upVotes: { type: Number, default: 0 },
     downVotes: { type: Number, default: 0 },
+    upvotedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    downvotedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [CommentSchema],
   },
   { timestamps: true }
