@@ -8,6 +8,7 @@ import express, { Application, Request, Response } from "express";
 import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
+import path from "path";
 
 const app: Application = express();
 
@@ -16,6 +17,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // application routes
 app.use("/api/v1", router); // /api/v1 will prefix all the route. This is the connection with the index.ts file inside the routes folder.

@@ -7,37 +7,35 @@ const confirmationService = async (transactionId: string) => {
   try {
     const verifyResponse = await verifyPayment(transactionId);
 
+    let result;
+    let message = "";
+
     if (verifyResponse && verifyResponse.pay_status === "Successful") {
       const userId = transactionId.split("-")[1];
-      const user = await User.findByIdAndUpdate(
+      result = await User.findByIdAndUpdate(
         userId,
         { isVerified: true },
         { new: true }
       );
 
-      if (!user) {
+      if (!result) {
         throw new Error("User not found");
       }
 
-      return {
-        success: true,
-        message: "User verified successfully!",
-        data: user,
-      };
+      message = "User verified and payment successful!";
     } else {
-      return {
-        success: false,
-        message: "Payment Failed!",
-        data: null,
-      };
+      message = "Payment Failed!";
     }
+
+    const filePath = join(__dirname, "../../../../public/confirmation.html");
+    let template = readFileSync(filePath, "utf-8");
+
+    template = template.replace("{{message}}", message);
+
+    return template;
   } catch (error) {
     console.error("Error in confirmationService:", error);
-    return {
-      success: false,
-      message: "An error occurred during payment confirmation",
-      data: null,
-    };
+    return "An error occurred during payment confirmation";
   }
 };
 
