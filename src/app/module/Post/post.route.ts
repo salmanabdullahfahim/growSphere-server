@@ -13,7 +13,7 @@ router.post(
   postController.createPost
 );
 
-router.put(
+router.patch(
   "/update-post/:id",
 
   validateRequest(postValidations.updatePostSchema),

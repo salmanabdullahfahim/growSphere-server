@@ -6,17 +6,20 @@ const CommentSchema: Schema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-const PostSchema: Schema = new Schema<TPost>({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  category: { type: String, required: true },
-  isPremium: { type: Boolean, default: false },
-  images: [{ type: String }],
-  upVotes: { type: Number, default: 0 },
-  downVotes: { type: Number, default: 0 },
-  comments: [CommentSchema],
-});
+const PostSchema: Schema = new Schema<TPost>(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    category: { type: String, required: true },
+    isPremium: { type: Boolean, default: false },
+    images: [{ type: String }],
+    upVotes: { type: Number, default: 0 },
+    downVotes: { type: Number, default: 0 },
+    comments: [CommentSchema],
+  },
+  { timestamps: true }
+);
 
 export const Post = mongoose.model<TPost & Document>("Post", PostSchema);
 export const Comment = mongoose.model<TComment & Document>(

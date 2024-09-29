@@ -7,7 +7,7 @@ const createPost = catchAsync(async (req, res) => {
   const result = await postServices.createPost(req.body);
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "Post created successfully",
     data: result,
   });
