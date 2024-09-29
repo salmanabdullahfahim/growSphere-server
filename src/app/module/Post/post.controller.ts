@@ -120,7 +120,7 @@ const editComment = catchAsync(async (req, res) => {
 
 const deleteComment = catchAsync(async (req, res) => {
   const { postId, commentId } = req.params;
-  const userId = req.body;
+  const { userId } = req.body;
 
   if (!userId) {
     throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
