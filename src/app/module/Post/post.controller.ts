@@ -90,8 +90,7 @@ const vote = catchAsync(async (req, res) => {
 
 const editComment = catchAsync(async (req, res) => {
   const { postId, commentId } = req.params;
-  const { content } = req.body;
-  const userId = req.user?._id;
+  const { content, userId } = req.body;
 
   if (!userId) {
     throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
@@ -121,7 +120,7 @@ const editComment = catchAsync(async (req, res) => {
 
 const deleteComment = catchAsync(async (req, res) => {
   const { postId, commentId } = req.params;
-  const userId = req.user?._id;
+  const userId = req.body;
 
   if (!userId) {
     throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");

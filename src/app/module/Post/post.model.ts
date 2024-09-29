@@ -1,10 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { TPost, TComment } from "./post.interface";
 
-const CommentSchema: Schema = new Schema({
-  content: { type: String, required: true },
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-});
+const CommentSchema: Schema = new Schema<TComment>(
+  {
+    content: { type: String, required: true },
+    commentator: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  { timestamps: true }
+);
 
 const PostSchema: Schema = new Schema<TPost>(
   {

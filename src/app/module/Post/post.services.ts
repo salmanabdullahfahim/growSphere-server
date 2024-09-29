@@ -39,21 +39,17 @@ const getPosts = async (
 
 const addComment = async (
   postId: string,
-  commentData: Omit<TComment, "createdAt" | "updatedAt">
+  commentData: TComment
 ): Promise<TPost | null> => {
   const result = await Post.findByIdAndUpdate(
     postId,
     {
       $push: {
-        comments: {
-          ...commentData,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
+        comments: commentData,
       },
     },
     { new: true }
-  ).populate("author");
+  );
   return result;
 };
 
@@ -117,16 +113,15 @@ const editComment = async (
     {
       _id: postId,
       "comments._id": commentId,
-      "comments.author": new Types.ObjectId(userId),
+      "comments.commentator": new Types.ObjectId(userId),
     },
     {
       $set: {
         "comments.$.content": updatedContent,
-        "comments.$.updatedAt": new Date(),
       },
     },
     { new: true }
-  ).populate("author");
+  );
   return result;
 };
 
@@ -139,13 +134,13 @@ const deleteComment = async (
     {
       _id: postId,
       "comments._id": commentId,
-      "comments.author": new Types.ObjectId(userId),
+      "comments.commentator": new Types.ObjectId(userId),
     },
     {
       $pull: { comments: { _id: commentId } },
     },
     { new: true }
-  ).populate("author");
+  );
   return result;
 };
 

@@ -16,5 +16,5 @@ export type TPost = {
 
 export type TComment = {
   content: string;
-  author: Types.ObjectId;
+  commentator: Types.ObjectId;
 };

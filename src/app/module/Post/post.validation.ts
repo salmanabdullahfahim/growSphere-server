@@ -24,7 +24,7 @@ const updatePostSchema = z.object({
 const commentSchema = z.object({
   body: z.object({
     content: z.string().min(1),
-    author: z.string({ required_error: "Author is required" }),
+    commentator: z.string({ required_error: "Commentator is required" }),
   }),
 });
 
