@@ -27,6 +27,18 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.verifyUser(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User verified successfully",
+    data: result,
+  });
+});
+
 const followUser = catchAsync(async (req: Request, res: Response) => {
   const { followerId } = req.body;
   const followingId = req.params.id;
@@ -104,6 +116,7 @@ const getUserFavoritesPosts = catchAsync(
 export const userController = {
   getUserByEmail,
   updateUser,
+  verifyUser,
   followUser,
   unfollowUser,
   favoritePost,

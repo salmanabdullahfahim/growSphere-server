@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .confirmation-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .icon {
+            font-size: 50px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4a53c0;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #545ec1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="confirmation-container">
+        <div class="icon">✔</div>
+        <h1>Payment Successful!</h1>
+        <p class="message">{{message}}</p>
+        <a href="https://tmeetingroom.vercel.app/my-bookings" class="button">Return to Your Booking page</a>
+    </div>
+</body>
+
+</html>

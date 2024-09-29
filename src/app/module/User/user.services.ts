@@ -1,5 +1,7 @@
 import { User } from "./user.model";
 import { TUser } from "./user.interface";
+import { Post } from "../Post/post.model";
+import { initiatePayment } from "../Payment/payment.utils";
 
 const getSingleUser = async (email: string) => {
   const result = await User.findOne({ email: email });
@@ -14,6 +16,41 @@ const updateUser = async (id: string, payload: Partial<TUser>) => {
   ).select("-password");
 
   return result;
+};
+
+const verifyUser = async (id: string) => {
+  // Check if the user has at least one post with 5 or more upvotes
+  const eligiblePost = await Post.findOne({ author: id, upVotes: { $gte: 5 } });
+
+  if (!eligiblePost) {
+    throw new Error("User is not eligible for verification");
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.isVerified) {
+    throw new Error("User is already verified");
+  }
+
+  // Initiate payment
+  const paymentData = {
+    transactionId: `TRXN-${id}-${Date.now()}`,
+    totalAmount: "1200",
+    customerName: user.name,
+    customerEmail: user.email,
+    customerPhone: user.phone,
+  };
+  console.log(paymentData);
+
+  const paymentSession = await initiatePayment(paymentData);
+  console.log(paymentSession);
+  // Return the payment URL for the frontend to redirect the user
+
+  return paymentSession;
 };
 
 const followUser = async (followerId: string, followingId: string) => {
@@ -72,6 +109,7 @@ const getUserFavorites = async (userId: string) => {
 export const userServices = {
   getSingleUser,
   updateUser,
+  verifyUser,
   followUser,
   unfollowUser,
   favoritePost,

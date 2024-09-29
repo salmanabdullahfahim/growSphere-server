@@ -16,6 +16,8 @@ router.patch(
   userController.updateUser
 );
 
+router.post("/verify/:id", userController.verifyUser);
+
 router.post("/follow/:id", userController.followUser);
 
 router.post("/unfollow/:id", userController.unfollowUser);
