@@ -20,7 +20,7 @@ const updateUser = async (id: string, payload: Partial<TUser>) => {
 
 const verifyUser = async (id: string) => {
   // Check if the user has at least one post with 5 or more upvotes
-  const eligiblePost = await Post.findOne({ author: id, upVotes: { $gte: 5 } });
+  const eligiblePost = await Post.findOne({ author: id, upVotes: { $gte: 1 } });
 
   if (!eligiblePost) {
     throw new Error("User is not eligible for verification");
