@@ -32,6 +32,13 @@ const getPost = async (id: string): Promise<TPost | null> => {
   return result;
 };
 
+const getPostsByUser = async (userId: string): Promise<TPost[] | null> => {
+  const result = await Post.find({ author: userId })
+    .populate("author")
+    .sort({ createdAt: -1 });
+  return result;
+};
+
 const getPosts = async (
   query: Record<string, unknown>
 ): Promise<{ posts: TPost[]; total: number; page: number; limit: number }> => {
@@ -169,6 +176,7 @@ export const postServices = {
   updatePost,
   deletePost,
   getPost,
+  getPostsByUser,
   getPosts,
   addComment,
   vote,

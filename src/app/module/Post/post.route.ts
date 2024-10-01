@@ -30,6 +30,8 @@ router.get("/:id", postController.getPost);
 
 router.get("/", postController.getPosts);
 
+router.get("/user/:id", postController.getPostsByUser);
+
 router.post(
   "/:id/comments",
 

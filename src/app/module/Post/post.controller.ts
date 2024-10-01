@@ -46,6 +46,16 @@ const getPost = catchAsync(async (req, res) => {
   });
 });
 
+const getPostsByUser = catchAsync(async (req, res) => {
+  const result = await postServices.getPostsByUser(req.params.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Posts retrieved successfully",
+    data: result,
+  });
+});
+
 const getPosts = catchAsync(async (req, res) => {
   const query = { ...req.query };
 
@@ -162,6 +172,7 @@ export const postController = {
   updatePost,
   deletePost,
   getPost,
+  getPostsByUser,
   getPosts,
   addComment,
   vote,
