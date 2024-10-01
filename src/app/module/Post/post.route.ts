@@ -3,12 +3,15 @@ import express from "express";
 import validateRequest from "../../middlewares/validateRequest";
 import { postValidations } from "./post.validation";
 import { postController } from "./post.controller";
+import auth from "../../middlewares/auth";
+import { USER_ROLE } from "../User/user.constant";
 
 const router = express.Router();
 
 router.post(
   "/create-post",
 
+  auth(USER_ROLE.user),
   validateRequest(postValidations.createPostSchema),
   postController.createPost
 );
@@ -16,6 +19,7 @@ router.post(
 router.patch(
   "/update-post/:id",
 
+  auth(USER_ROLE.user),
   validateRequest(postValidations.updatePostSchema),
   postController.updatePost
 );
@@ -23,18 +27,20 @@ router.patch(
 router.delete(
   "/:id",
 
+  auth(USER_ROLE.user),
   postController.deletePost
 );
 
-router.get("/:id", postController.getPost);
+router.get("/:id", auth(USER_ROLE.user), postController.getPost);
 
 router.get("/", postController.getPosts);
 
-router.get("/user/:id", postController.getPostsByUser);
+router.get("/user/:id", auth(USER_ROLE.user), postController.getPostsByUser);
 
 router.post(
   "/:id/comments",
 
+  auth(USER_ROLE.user),
   validateRequest(postValidations.commentSchema),
   postController.addComment
 );
@@ -42,6 +48,7 @@ router.post(
 router.post(
   "/:id/vote",
 
+  auth(USER_ROLE.user),
   validateRequest(postValidations.voteSchema),
   postController.vote
 );
