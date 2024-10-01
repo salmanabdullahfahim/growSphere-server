@@ -3,6 +3,7 @@ import { TPost, TComment } from "./post.interface";
 import { Types } from "mongoose";
 import { SortOrder } from "mongoose";
 import { QueryBuilder } from "../../builder/QueryBuilder";
+import { searchableFields } from "../../utils/searchableFields";
 
 const createPost = async (postData: Partial<TPost>): Promise<TPost> => {
   const result = await Post.create(postData);
@@ -34,7 +35,6 @@ const getPost = async (id: string): Promise<TPost | null> => {
 const getPosts = async (
   query: Record<string, unknown>
 ): Promise<{ posts: TPost[]; total: number; page: number; limit: number }> => {
-  const searchableFields = ["title", "content"];
   const postQuery = new QueryBuilder(Post.find().populate("author"), query)
     .search(searchableFields)
     .filter()

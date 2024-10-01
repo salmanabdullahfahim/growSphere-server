@@ -7,7 +7,7 @@ const userValidationSchema = z.object({
     profileImage: z.string({ required_error: "Profile Image is required" }),
     password: z.string({ required_error: "Password is required" }),
     phone: z.string({ required_error: "Phone Number is required" }),
-    role: z.enum(["admin", "user"]),
+
     isVerified: z.boolean().optional(),
   }),
 });
