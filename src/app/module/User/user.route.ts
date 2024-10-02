@@ -7,7 +7,13 @@ import { USER_ROLE } from "./user.constant";
 
 const router = express.Router();
 
-router.get("/:email", userController.getUserByEmail);
+router.get(
+  "/:email",
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  userController.getUserByEmail
+);
+
+router.get("/", auth(USER_ROLE.admin), userController.getAllUsers);
 
 router.patch(
   "/updateProfile/:id",

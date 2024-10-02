@@ -8,6 +8,11 @@ const getSingleUser = async (email: string) => {
   return result;
 };
 
+const getAllUsers = async () => {
+  const result = await User.find();
+  return result;
+};
+
 const updateUser = async (id: string, payload: Partial<TUser>) => {
   const result = await User.findByIdAndUpdate(
     id,
@@ -108,6 +113,7 @@ const getUserFavorites = async (userId: string) => {
 
 export const userServices = {
   getSingleUser,
+  getAllUsers,
   updateUser,
   verifyUser,
   followUser,
