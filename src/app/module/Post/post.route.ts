@@ -40,7 +40,6 @@ router.get("/user/:id", auth(USER_ROLE.user), postController.getPostsByUser);
 router.post(
   "/:id/comments",
 
-  auth(USER_ROLE.user),
   validateRequest(postValidations.commentSchema),
   postController.addComment
 );

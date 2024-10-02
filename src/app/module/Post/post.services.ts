@@ -42,7 +42,10 @@ const getPostsByUser = async (userId: string): Promise<TPost[] | null> => {
 const getPosts = async (
   query: Record<string, unknown>
 ): Promise<{ posts: TPost[]; total: number; page: number; limit: number }> => {
-  const postQuery = new QueryBuilder(Post.find().populate("author"), query)
+  const postQuery = new QueryBuilder(
+    Post.find().populate("author").populate("comments.commentator"),
+    query
+  )
     .search(searchableFields)
     .filter()
     .sort()
