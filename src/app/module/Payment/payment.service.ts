@@ -2,6 +2,7 @@ import { join } from "path";
 import { verifyPayment } from "./payment.utils";
 import { readFileSync } from "fs";
 import { User } from "../User/user.model";
+import { Payment } from "./payment.model";
 
 const confirmationService = async (transactionId: string) => {
   try {
@@ -17,6 +18,8 @@ const confirmationService = async (transactionId: string) => {
         { isVerified: true },
         { new: true }
       );
+
+      await Payment.create({ transactionId, userId });
 
       if (!result) {
         throw new Error("User not found");
