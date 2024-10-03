@@ -15,7 +15,7 @@ router.get(
 
 router.get("/", auth(USER_ROLE.admin), userController.getAllUsers);
 
-router.patch(
+router.put(
   "/updateProfile/:id",
   auth(USER_ROLE.user, USER_ROLE.admin),
   validateRequest(userValidations.updateUserValidationSchema),

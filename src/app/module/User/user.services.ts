@@ -8,6 +8,11 @@ const getSingleUser = async (email: string) => {
   return result;
 };
 
+const getUserById = async (id: string) => {
+  const result = await User.findById(id);
+  return result;
+};
+
 const getAllUsers = async () => {
   const result = await User.find();
   return result;
@@ -113,6 +118,7 @@ const getUserFavorites = async (userId: string) => {
 
 export const userServices = {
   getSingleUser,
+  getUserById,
   getAllUsers,
   updateUser,
   verifyUser,
