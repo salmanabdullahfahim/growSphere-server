@@ -57,15 +57,7 @@ const getPostsByUser = catchAsync(async (req, res) => {
 });
 
 const getPosts = catchAsync(async (req, res) => {
-  const query = { ...req.query };
-
-  // If there's a search term, modify the sort to prioritize upvotes
-  if (query.searchTerm) {
-    query.sort = "upVotes";
-    query.order = "desc";
-  }
-
-  const result = await postServices.getPosts(query);
+  const result = await postServices.getPosts(req.query);
 
   sendResponse(res, {
     success: true,

@@ -1,9 +1,7 @@
 import { Post } from "./post.model";
 import { TPost, TComment } from "./post.interface";
 import { Types } from "mongoose";
-import { SortOrder } from "mongoose";
 import { QueryBuilder } from "../../builder/QueryBuilder";
-import { searchableFields } from "../../utils/searchableFields";
 
 const createPost = async (postData: Partial<TPost>): Promise<TPost> => {
   const result = await Post.create(postData);
@@ -39,32 +37,35 @@ const getPostsByUser = async (userId: string): Promise<TPost[] | null> => {
   return result;
 };
 
-const getPosts = async (
-  query: Record<string, unknown>
-): Promise<{ posts: TPost[]; total: number; page: number; limit: number }> => {
-  const postQuery = new QueryBuilder(
-    Post.find().populate("author").populate("comments.commentator"),
-    query
-  )
-    .search(searchableFields)
-    .filter()
-    .sort()
+const getPosts = async (query: Record<string, unknown>) => {
+  const posts = new QueryBuilder(Post.find(), query)
+    .fields()
     .paginate()
-    .fields();
+    .sort()
+    .filter()
+    .search(["content", "category", "title"])
+    .build();
 
-  const [posts, total] = await Promise.all([
-    postQuery.modelQuery,
-    Post.countDocuments(postQuery.modelQuery.getFilter()),
-  ]);
+  const result = await posts
+    .populate({
+      path: "comments",
+      populate: {
+        path: "commentator", // Populate the user inside each comment
+        select: "name profileImage", // Choose the fields you want to retrieve
+      },
+    })
+    .populate({
+      path: "author", // Populate the user of the post
+      select: "name profileImage", // Choose the fields you want to retrieve
+    });
 
-  const { page = 1, limit = 10 } = query;
+  return result;
+};
 
-  return {
-    posts,
-    total,
-    page: Number(page),
-    limit: Number(limit),
-  };
+const getAPostFromDB = async (id: string) => {
+  const posts = await Post.findById(id).populate("user");
+
+  return posts;
 };
 
 const addComment = async (
