@@ -56,7 +56,7 @@ const getPosts = async (query: Record<string, unknown>) => {
     })
     .populate({
       path: "author", // Populate the user of the post
-      select: "name profileImage", // Choose the fields you want to retrieve
+      select: "name profileImage isVerified", // Choose the fields you want to retrieve
     });
 
   return result;

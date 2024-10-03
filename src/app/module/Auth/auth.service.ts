@@ -28,8 +28,11 @@ const loginUser = async (payload: TLoginUser) => {
   // create access token
 
   const jwtPayload = {
+    // @ts-expect-error
+    id: user?._id,
     email: user?.email,
     role: user?.role,
+    isVerified: user?.isVerified,
   };
   const accessToken = createToken(
     jwtPayload,

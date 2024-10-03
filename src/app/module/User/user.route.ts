@@ -22,7 +22,11 @@ router.put(
   userController.updateUser
 );
 
-router.post("/verify/:id", userController.verifyUser);
+router.post(
+  "/verify/:id",
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  userController.verifyUser
+);
 
 router.post("/follow/:id", userController.followUser);
 
