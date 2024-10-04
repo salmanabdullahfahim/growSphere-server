@@ -58,10 +58,9 @@ const verifyUser = async (id: string) => {
     customerEmail: user.email,
     customerPhone: user.phone,
   };
-  console.log(paymentData);
 
   const paymentSession = await initiatePayment(paymentData);
-  console.log(paymentSession);
+
   // Return the payment URL for the frontend to redirect the user
 
   return paymentSession;
