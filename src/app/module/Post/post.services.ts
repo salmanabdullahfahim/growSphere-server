@@ -39,11 +39,10 @@ const getPostsByUser = async (userId: string): Promise<TPost[] | null> => {
 
 const getPosts = async (query: Record<string, unknown>) => {
   const posts = new QueryBuilder(Post.find(), query)
-    .fields()
-    .paginate()
-    .sort()
-    .filter()
     .search(["content", "category", "title"])
+    .filter()
+    .paginate()
+    .fields()
     .build();
 
   const result = await posts
