@@ -11,6 +11,7 @@ export interface TUser {
   password: string;
   phone: string;
   role: "user" | "admin";
+  status: "active" | "blocked";
   followers: TUser[];
   following: TUser[];
   favoritesPosts: Schema.Types.ObjectId[];

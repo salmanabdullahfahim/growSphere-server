@@ -11,6 +11,7 @@ const userSchema = new Schema<TUser, UserModel>(
     password: { type: String, required: true, select: 0 },
     phone: { type: String, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    status: { type: String, enum: ["active", "blocked"], default: "active" },
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: Schema.Types.ObjectId, ref: "User" }],
     favoritesPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],

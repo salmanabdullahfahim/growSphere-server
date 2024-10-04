@@ -33,7 +33,7 @@ router.delete(
 
 router.get("/:id", auth(USER_ROLE.user), postController.getPost);
 
-router.get("/", postController.getPosts);
+router.get("/", auth(USER_ROLE.user, USER_ROLE.admin), postController.getPosts);
 
 router.get("/user/:id", auth(USER_ROLE.user), postController.getPostsByUser);
 

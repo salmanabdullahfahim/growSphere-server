@@ -10,6 +10,12 @@ const confirmationController = async (req: Request, res: Response) => {
   res.send(result);
 };
 
+const getPaymentHistory = async (req: Request, res: Response) => {
+  const result = await paymentServices.getPaymentHistory();
+  res.send(result);
+};
+
 export const paymentController = {
   confirmationController,
+  getPaymentHistory,
 };
