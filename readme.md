@@ -10,11 +10,6 @@ This repository contains the backend/server-side implementation for the **Garden
 - [Core Technologies](#core-technologies)
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [API Endpoints](#api-endpoints)
-- [How It Works](#how-it-works)
-- [Future Enhancements](#future-enhancements)
-- [License](#license)
 
 ---
 
