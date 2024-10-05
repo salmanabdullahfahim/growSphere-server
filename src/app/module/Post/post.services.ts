@@ -50,7 +50,7 @@ const getPosts = async (query: Record<string, unknown>) => {
       path: "comments",
       populate: {
         path: "commentator", // Populate the user inside each comment
-        select: "name profileImage", // Choose the fields you want to retrieve
+        select: "name profileImage createdAt", // Choose the fields you want to retrieve
       },
     })
     .populate({
@@ -79,7 +79,7 @@ const addComment = async (
       },
     },
     { new: true }
-  );
+  ).populate("comments");
   return result;
 };
 
