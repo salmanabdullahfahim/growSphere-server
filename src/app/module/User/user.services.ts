@@ -30,11 +30,11 @@ const updateUser = async (id: string, payload: Partial<TUser>) => {
   return result;
 };
 
-const changeUserStatus = async (id: string, status: string) => {
+const changeUserStatus = async (id: string, payload: Partial<TUser>) => {
   const result = await User.findByIdAndUpdate(
     id,
-    { status: status },
-    { new: true }
+    { $set: payload },
+    { new: true, runValidators: true }
   );
   return result;
 };
