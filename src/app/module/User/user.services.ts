@@ -30,6 +30,15 @@ const updateUser = async (id: string, payload: Partial<TUser>) => {
   return result;
 };
 
+const changeUserStatus = async (id: string, status: string) => {
+  const result = await User.findByIdAndUpdate(
+    id,
+    { status: status },
+    { new: true }
+  );
+  return result;
+};
+
 const verifyUser = async (id: string) => {
   // Check if the user has at least one post with 1 or more upvotes
   const eligiblePost = await Post.findOne({ author: id, upVotes: { $gte: 1 } });
@@ -124,6 +133,7 @@ export const userServices = {
   getUserById,
   getAllUsers,
   updateUser,
+  changeUserStatus,
   verifyUser,
   followUser,
   unfollowUser,

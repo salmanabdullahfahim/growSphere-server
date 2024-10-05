@@ -55,6 +55,36 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  // Fetch the current user data
+  const currentUser = await userServices.getUserById(id);
+
+  if (!currentUser) {
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: "User not found",
+      data: null,
+    });
+  }
+
+  // Merge current user data with update data
+  const mergedData = { ...currentUser.toObject(), ...updateData };
+
+  // Update the user with merged data
+  const result = await userServices.changeUserStatus(id, mergedData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User status updated successfully",
+    data: result,
+  });
+});
+
 const verifyUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await userServices.verifyUser(id);
@@ -145,6 +175,7 @@ export const userController = {
   getUserByEmail,
   getAllUsers,
   updateUser,
+  changeUserStatus,
   verifyUser,
   followUser,
   unfollowUser,

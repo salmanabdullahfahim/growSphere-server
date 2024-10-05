@@ -22,6 +22,12 @@ router.put(
   userController.updateUser
 );
 
+router.put(
+  "/changeStatus/:id",
+  auth(USER_ROLE.admin),
+  userController.changeUserStatus
+);
+
 router.post(
   "/verify/:id",
   auth(USER_ROLE.user, USER_ROLE.admin),
