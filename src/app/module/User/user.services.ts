@@ -4,9 +4,10 @@ import { Post } from "../Post/post.model";
 import { initiatePayment } from "../Payment/payment.utils";
 
 const getSingleUser = async (email: string) => {
-  const result = await User.findOne({ email: email }).populate(
-    "favoritesPosts"
-  );
+  const result = await User.findOne({ email: email })
+    .populate("favoritesPosts")
+    .populate("following")
+    .populate("followers");
   return result;
 };
 
