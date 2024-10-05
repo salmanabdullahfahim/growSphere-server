@@ -25,6 +25,12 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, "Password is not matched");
   }
 
+  if (user?.status === "blocked") {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "This user account has been blocked"
+    );
+  }
   // create access token
 
   const jwtPayload = {
