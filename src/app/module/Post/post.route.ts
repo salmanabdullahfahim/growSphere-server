@@ -53,7 +53,7 @@ router.post(
   postController.vote
 );
 
-router.patch(
+router.put(
   "/:postId/comments/:commentId",
 
   validateRequest(postValidations.editCommentSchema),
