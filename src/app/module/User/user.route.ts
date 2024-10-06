@@ -14,7 +14,11 @@ router.get(
 );
 
 router.get("/", auth(USER_ROLE.admin), userController.getAllUsers);
-router.get("/singleUser/:id", userController.getUserById);
+router.get(
+  "/singleUser/:id",
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  userController.getUserById
+);
 
 router.put(
   "/updateProfile/:id",
