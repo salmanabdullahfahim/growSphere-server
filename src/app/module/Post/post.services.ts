@@ -136,14 +136,13 @@ const vote = async (
 const editComment = async (
   postId: string,
   commentId: string,
-  userId: string,
+
   updatedContent: string
 ): Promise<TPost | null> => {
   const result = await Post.findOneAndUpdate(
     {
       _id: postId,
       "comments._id": commentId,
-      "comments.commentator": new Types.ObjectId(userId),
     },
     {
       $set: {
@@ -157,14 +156,12 @@ const editComment = async (
 
 const deleteComment = async (
   postId: string,
-  commentId: string,
-  userId: string
+  commentId: string
 ): Promise<TPost | null> => {
   const result = await Post.findOneAndUpdate(
     {
       _id: postId,
       "comments._id": commentId,
-      "comments.commentator": new Types.ObjectId(userId),
     },
     {
       $pull: { comments: { _id: commentId } },

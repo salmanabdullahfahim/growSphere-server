@@ -102,16 +102,12 @@ const vote = catchAsync(async (req, res) => {
 
 const editComment = catchAsync(async (req, res) => {
   const { postId, commentId } = req.params;
-  const { content, userId } = req.body;
-
-  if (!userId) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
-  }
+  const { content } = req.body;
 
   const result = await postServices.editComment(
     postId,
     commentId,
-    userId.toString(),
+
     content
   );
 
@@ -132,17 +128,8 @@ const editComment = catchAsync(async (req, res) => {
 
 const deleteComment = catchAsync(async (req, res) => {
   const { postId, commentId } = req.params;
-  const { userId } = req.body;
 
-  if (!userId) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "User not authenticated");
-  }
-
-  const result = await postServices.deleteComment(
-    postId,
-    commentId,
-    userId.toString()
-  );
+  const result = await postServices.deleteComment(postId, commentId);
 
   if (!result) {
     throw new AppError(
