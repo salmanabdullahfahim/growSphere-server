@@ -12,7 +12,9 @@ const getSingleUser = async (email: string) => {
 };
 
 const getUserById = async (id: string) => {
-  const result = await User.findById(id);
+  const result = await User.findById(id)
+    .populate("followers")
+    .populate("following");
   return result;
 };
 

@@ -15,6 +15,16 @@ const getUserByEmail = catchAsync(async (req, res) => {
   });
 });
 
+const getUserById = catchAsync(async (req, res) => {
+  const result = await userServices.getUserById(req.params.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User retrieved successfully",
+    data: result,
+  });
+});
+
 const getAllUsers = catchAsync(async (req, res) => {
   const result = await userServices.getAllUsers();
   sendResponse(res, {
@@ -173,6 +183,7 @@ const getUserFavoritesPosts = catchAsync(
 
 export const userController = {
   getUserByEmail,
+  getUserById,
   getAllUsers,
   updateUser,
   changeUserStatus,
