@@ -8,6 +8,7 @@ import config from "../../../config";
 import { Document } from "mongoose";
 import { sendEmail } from "../../utils/sendEmail";
 import bcrypt from "bcrypt";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const signUp = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -105,8 +106,52 @@ const forgetPassword = async (email: string) => {
   );
 
   const resetPasswordLink = `${config.reset_pass_ui_link}?id=${user?._id}&token=${resetToken}`;
-  sendEmail();
+  sendEmail(user.email, resetPasswordLink);
   console.log(resetPasswordLink);
+};
+
+const resetPassword = async (payload: {
+  id: string;
+  token: string;
+  password: string;
+}) => {
+  console.log("id, token, password", payload);
+  const user = await User.findById(payload?.id);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User does not exist");
+  }
+
+  const decoded = jwt.verify(
+    payload.token,
+    config.jwt_access_secret as string
+  ) as JwtPayload;
+
+  if (payload.id !== decoded?.id) {
+    throw new AppError(httpStatus.FORBIDDEN, "User does not exist");
+  }
+
+  const newHashedPassword = await bcrypt.hash(
+    payload?.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+
+  console.log(
+    "user, decoded, hashed password",
+    user,
+    decoded,
+    newHashedPassword
+  );
+
+  await User.findOneAndUpdate(
+    {
+      _id: decoded?.id,
+      role: decoded?.role,
+    },
+    {
+      password: newHashedPassword,
+    }
+  );
 };
 
 export const authService = {
@@ -114,4 +159,5 @@ export const authService = {
   loginUser,
   changePassword,
   forgetPassword,
+  resetPassword,
 };
