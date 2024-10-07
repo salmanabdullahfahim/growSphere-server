@@ -6,6 +6,8 @@ import AppError from "../../errors/AppError";
 import { createToken } from "./auth.utils";
 import config from "../../../config";
 import { Document } from "mongoose";
+import { sendEmail } from "../../utils/sendEmail";
+import bcrypt from "bcrypt";
 
 const signUp = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -57,7 +59,59 @@ const loginUser = async (payload: TLoginUser) => {
   };
 };
 
+const changePassword = async (id: string, password: string) => {
+  // Hash the new password
+  const saltRounds = Number(config.bcrypt_salt_rounds);
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+  // Update the user with the hashed password
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { password: hashedPassword },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  return updatedUser;
+};
+
+const forgetPassword = async (email: string) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  if (user?.status === "blocked") {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "This user account has been blocked"
+    );
+  }
+
+  // create access token
+  const jwtPayload = {
+    id: user?._id,
+    email: user?.email,
+    role: user?.role,
+    isVerified: user?.isVerified,
+  };
+
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    "10m"
+  );
+
+  const resetPasswordLink = `${config.reset_pass_ui_link}?id=${user?._id}&token=${resetToken}`;
+  sendEmail();
+  console.log(resetPasswordLink);
+};
+
 export const authService = {
   signUp,
   loginUser,
+  changePassword,
+  forgetPassword,
 };
