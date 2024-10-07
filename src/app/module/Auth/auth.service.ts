@@ -105,7 +105,7 @@ const forgetPassword = async (email: string) => {
     "10m"
   );
 
-  const resetPasswordLink = `${config.reset_pass_ui_link}/reset-password/id=${user?._id}/token=${resetToken}`;
+  const resetPasswordLink = `${config.reset_pass_ui_link}/reset-password/${user?._id}/${resetToken}`;
   sendEmail(user.email, resetPasswordLink);
   console.log(resetPasswordLink);
 };
@@ -115,7 +115,6 @@ const resetPassword = async (payload: {
   token: string;
   password: string;
 }) => {
-  console.log("id, token, password", payload);
   const user = await User.findById(payload?.id);
 
   if (!user) {
