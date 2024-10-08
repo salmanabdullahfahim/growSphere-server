@@ -5,7 +5,10 @@ import { initiatePayment } from "../Payment/payment.utils";
 
 const getSingleUser = async (email: string) => {
   const result = await User.findOne({ email: email })
-    .populate("favoritesPosts")
+    .populate({
+      path: "favoritesPosts",
+      populate: { path: "author" },
+    })
     .populate("following")
     .populate("followers");
   return result;
@@ -127,7 +130,10 @@ const unfavoritePost = async (userId: string, postId: string) => {
 };
 
 const getUserFavorites = async (userId: string) => {
-  const result = await User.findById(userId).populate("favoritesPosts");
+  const result = await User.findById(userId).populate({
+    path: "favoritesPosts",
+    populate: { path: "author" },
+  });
   return result?.favoritesPosts;
 };
 

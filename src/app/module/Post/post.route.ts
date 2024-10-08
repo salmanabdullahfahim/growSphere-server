@@ -16,7 +16,7 @@ router.post(
   postController.createPost
 );
 
-router.patch(
+router.put(
   "/update-post/:id",
 
   auth(USER_ROLE.user),
