@@ -106,7 +106,16 @@ const forgetPassword = async (email: string) => {
   );
 
   const resetPasswordLink = `${config.reset_pass_ui_link}/reset-password/${user?._id}/${resetToken}`;
-  await sendEmail(user.email, resetPasswordLink);
+
+  try {
+    await sendEmail(user.email, resetPasswordLink);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Failed to send reset password email"
+    );
+  }
 };
 
 const resetPassword = async (payload: {
